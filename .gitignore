@@ -1,0 +1,15 @@
+*.exe
+*.out
+*.o
+*.obj
+*.so
+*.dylib
+*.ilk
+*.pdb
+*.dll
+
+
+.vscode/
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
