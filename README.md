@@ -15,4 +15,4 @@ Es soll eine Musik-Bibliothek erstellt werden, welche von einem Online-Player ge
 
 ## UML-Diagramm
 
-LINK aus Übersicht
+![UML-Diagramm](UML_ClassDiagramm_MusicLibrary.png)
