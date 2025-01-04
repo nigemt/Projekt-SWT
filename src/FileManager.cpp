@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 
-void FileManager::save_to_file(MusicLibrary musicLibrary, std::string filePath)
+void FileManager::save_to_file(MusicLibrary musicLibrary)
 {
     nlohmann::json complete;
     vector<Track> mL = musicLibrary.get_tracks();
@@ -21,7 +21,7 @@ void FileManager::save_to_file(MusicLibrary musicLibrary, std::string filePath)
         };
         complete["tracks"].push_back(jT);
     }
-    std::ofstream file(filePath);
+    std::ofstream file(musicLibrary.get_name() + ".json");
     if (file.is_open()) {
         file << complete.dump(4);
         file.close();
@@ -30,11 +30,11 @@ void FileManager::save_to_file(MusicLibrary musicLibrary, std::string filePath)
     }
 }
 
-MusicLibrary* FileManager::load_from_file(std::string filePath)
+MusicLibrary* FileManager::load_from_file(std::string fileName)
 {
-    MusicLibrary* libraryToLoad = new MusicLibrary();
+    MusicLibrary* libraryToLoad = new MusicLibrary(fileName);
     
-    std::ifstream f(filePath);
+    std::ifstream f(fileName + ".json");
     nlohmann::json j = nlohmann::json::parse(f);
     for (const auto& t : j["tracks"]) {
         Track currentTrack;

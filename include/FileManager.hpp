@@ -6,6 +6,6 @@ class MusicLibrary;
 class FileManager
 {
 public:
-    void save_to_file(MusicLibrary musicLibrary, std::string filePath);
-    MusicLibrary* load_from_file(std::string filePath);
+    void save_to_file(MusicLibrary musicLibrary);
+    MusicLibrary* load_from_file(std::string fileName);
 };

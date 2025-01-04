@@ -1,8 +1,9 @@
 #include <iostream>
 #include <fstream>
+#include <limits>
 #include <string>
 #include "MusicLibrary.hpp"
-#include <limits>
+#include "FileManager.hpp"
 
 using namespace std;
 
@@ -11,7 +12,7 @@ FileManager fM;
 
 void create_dummy_data()
 {
-    MusicLibrary testdummy;
+    MusicLibrary testdummy("default");
     Track testTrack;
     testTrack.title = "Never Gonna Give You Up";
     testTrack.album = "Secretly EVERY ALBUM";
@@ -28,7 +29,7 @@ void create_dummy_data()
     testTrack2.genere = "-";
     testTrack2.artist = "-";
     testdummy.add_track(testTrack2);
-    fM.save_to_file(testdummy, "default.json");
+    fM.save_to_file(testdummy);
 }
 
 void printLibraryMenu()
@@ -44,7 +45,7 @@ void printLibraryMenu()
 
 void create_Library()
 {
-    cout << "Geben sie den Dateinamen der zu erstellenden Bilbiothek oder Abbrechen ein." << endl;
+    cout << "Geben sie den Namen der zu erstellenden Bilbiothek oder Abbrechen ein." << endl;
     string input;
     while (true)
     {
@@ -61,8 +62,8 @@ void create_Library()
         }
         else
         {
-            musicLibrary = new MusicLibrary();
-            fM.save_to_file(*musicLibrary, input);
+            musicLibrary = new MusicLibrary(input);
+            fM.save_to_file(*musicLibrary);
             cout << "neue Bibliothek wurde erstellt und wurde ausgewaehlt." << endl;
             break;
         }
@@ -71,7 +72,7 @@ void create_Library()
 
 int enter_LibraryName()
 {
-    cout << "Geben Sie den Dateinamen der Bibliothek zum oeffnen oder Abbrechen ein." << endl;
+    cout << "Geben Sie den Namen der Bibliothek zum Oeffnen oder Abbrechen ein." << endl;
     string input, yesno;
     do
     {
@@ -93,8 +94,8 @@ int enter_LibraryName()
         {
             if (yesno == "Ja" || yesno == "ja")
             {
-                musicLibrary = new MusicLibrary();
-                fM.save_to_file(*musicLibrary, input);
+                musicLibrary = new MusicLibrary(input);
+                fM.save_to_file(*musicLibrary);
                 cout << "neue Bibliothek wurde erstellt und wurde ausgewaehlt." << endl;
                 return 4;
             }
@@ -121,7 +122,7 @@ void showLibraryMenu()
         case 1:
             cout << "Die Default Bibliothek wird geladen." << endl;
             create_dummy_data();
-            musicLibrary = fM.load_from_file("default.json");
+            musicLibrary = fM.load_from_file("default");
             input = 4;
             break;
         case 2:
@@ -151,6 +152,69 @@ void printTitelMenu()
     cout << "5. zurueck" << endl;
 }
 
+void add_track()
+{
+    string inputS;
+    int inputI;
+    Track toAdd;
+    cout << "Sie koennen jederzeit Abbrechen durch die Eingabe 'Abbrechen'" << endl;
+    cout << "Geben Sie den Titel ein." << endl;
+    cin >> inputS;
+    if (inputS == "Abbrechen")
+    {
+        cout << "Abgebrochen." << endl;
+        return;
+    }
+    else
+        toAdd.title = inputS;
+    cout << "Geben Sie den Namen des Albums ein." << endl;
+    cin >> inputS;
+    if (inputS == "Abbrechen")
+    {
+        cout << "Abgebrochen." << endl;
+        return;
+    }
+    else
+        toAdd.album = inputS;
+    cout << "Geben Sie den Kuenstler ein." << endl;
+    cin >> inputS;
+    if (inputS == "Abbrechen")
+    {
+        cout << "Abgebrochen." << endl;
+        return;
+    }
+    else
+        toAdd.artist = inputS;
+    cout << "Geben Sie das Genere ein." << endl;
+    cin >> inputS;
+    if (inputS == "Abbrechen")
+    {
+        cout << "Abgebrochen." << endl;
+        return;
+    }
+    else
+        toAdd.genere = inputS;
+    cout << "Geben Sie das Erscheinungsjahr ein." << endl;
+    cin >> inputI;
+    if (inputI == -1)
+    {
+        cout << "Abgebrochen." << endl;
+        return;
+    }
+    else
+        toAdd.release = inputI;
+    cout << "Geben Sie die Dauer in sekunden ein." << endl;
+    cin >> inputI;
+    if (inputI == -1)
+    {
+        cout << "Abgebrochen." << endl;
+        return;
+    }
+    else
+        toAdd.duration = inputI;
+    musicLibrary->add_track(toAdd);
+}
+
 void titelMenu()
 {
     int input;
@@ -164,11 +228,12 @@ void titelMenu()
         case 1:
             musicLibrary->printTracks();
             cout << "Enter um zu dem Menue zu springen." << endl;
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            getline(cin, hold);
+            // wait for user to hit enter
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.get();
             break;
         case 2:
-            cout << "hier titel hinzufuegen" << endl;
+            add_track();
             break;
         case 3:
             cout << "hier titel loeschen" << endl;
@@ -181,7 +246,7 @@ void titelMenu()
             break;
 
         default:
-            cout << "Bitte geben Sie eine gültige Zahl ein." << endl;
+            cout << "Bitte geben Sie eine gueltige Zahl ein." << endl;
             break;
         }
 
@@ -236,7 +301,12 @@ void printMainMenu()
 {
     cout << "Hauptmenu" << endl;
     cout << "Bitte geben Sie die Zahl des Menuepunktes ein." << endl;
-    cout << "1. Bibliothek Menu" << endl;
+    cout << "1. Bibliothek Menu";
+    if (musicLibrary != 0)
+    {
+        cout << " (Derzeit geladen: " + musicLibrary->get_name() + ")";
+    }
+    cout << endl;
     if (musicLibrary != 0)
     {
         cout << "2. Titel Menu" << endl;
@@ -254,7 +324,7 @@ int mainMenu()
         cin >> input;
         switch (input)
         {
-        case 2:
+        case 2: //
             if (musicLibrary != 0)
             {
                 titelMenu();
@@ -280,10 +350,13 @@ int mainMenu()
     } while (input != 4);
     return 0;
 }
+void nope()
+{
+}
 
 int main()
 {
-    // create_dummy_data();
     mainMenu();
+    nope();
     return 0;
 }
