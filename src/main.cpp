@@ -8,27 +8,28 @@
 using namespace std;
 
 MusicLibrary *musicLibrary;
+Track *selectedTrack;
 FileManager fM;
 
 void create_dummy_data()
 {
     MusicLibrary testdummy("default");
-    Track testTrack;
-    testTrack.title = "Never Gonna Give You Up";
-    testTrack.album = "Secretly EVERY ALBUM";
-    testTrack.duration = 3 * 60;
-    testTrack.release = 0;
-    testTrack.genere = "EVERYTHING";
-    testTrack.artist = "Rick Astley";
+    Track *testTrack = new Track();
+    testTrack->title = "Never Gonna Give You Up";
+    testTrack->album = "Secretly EVERY ALBUM";
+    testTrack->duration = 3 * 60;
+    testTrack->release = 0;
+    testTrack->genere = "EVERYTHING";
+    testTrack->artist = "Rick Astley";
     testdummy.add_track(testTrack);
-    Track testTrack2;
-    testTrack2.title = "HEYYEYAAEYAAAEYAEYAA";
-    testTrack2.album = "-";
-    testTrack2.duration = 2 * 60 + 6;
-    testTrack2.release = 0;
-    testTrack2.genere = "-";
-    testTrack2.artist = "-";
-    testdummy.add_track(testTrack2);
+    testTrack = new Track();
+    testTrack->title = "HEYYEYAAEYAAAEYAEYAA";
+    testTrack->album = "-";
+    testTrack->duration = 2 * 60 + 6;
+    testTrack->release = 0;
+    testTrack->genere = "-";
+    testTrack->artist = "-";
+    testdummy.add_track(testTrack);
     fM.save_to_file(testdummy);
 }
 
@@ -147,17 +148,16 @@ void printTitelMenu()
     cout << "Bitte geben Sie die Zahl des Menuepunktes ein." << endl;
     cout << "1. Alle Titel ausgeben" << endl;
     cout << "2. Titel hinzufuegen" << endl;
-    cout << "3. Titel loeschen" << endl;
-    cout << "4. Titel bearbeiten" << endl;
-    cout << "5. zurueck" << endl;
+    cout << "3. Titel bearbeiten/loeschen" << endl;
+    cout << "4. zurueck" << endl;
 }
 
 void add_track()
 {
     string inputS;
     int inputI;
-    Track toAdd;
-    cout << "Sie koennen jederzeit Abbrechen durch die Eingabe 'Abbrechen'" << endl;
+    Track *toAdd = new Track();
+    cout << "Sie koennen jederzeit Abbrechen durch die Eingabe 'Abbrechen' oder '-1'" << endl;
     cout << "Geben Sie den Titel ein." << endl;
     cin >> inputS;
     if (inputS == "Abbrechen")
@@ -166,7 +166,7 @@ void add_track()
         return;
     }
     else
-        toAdd.title = inputS;
+        toAdd->title = inputS;
     cout << "Geben Sie den Namen des Albums ein." << endl;
     cin >> inputS;
     if (inputS == "Abbrechen")
@@ -175,7 +175,7 @@ void add_track()
         return;
     }
     else
-        toAdd.album = inputS;
+        toAdd->album = inputS;
     cout << "Geben Sie den Kuenstler ein." << endl;
     cin >> inputS;
     if (inputS == "Abbrechen")
@@ -184,7 +184,7 @@ void add_track()
         return;
     }
     else
-        toAdd.artist = inputS;
+        toAdd->artist = inputS;
     cout << "Geben Sie das Genere ein." << endl;
     cin >> inputS;
     if (inputS == "Abbrechen")
@@ -193,28 +193,205 @@ void add_track()
         return;
     }
     else
-        toAdd.genere = inputS;
+        toAdd->genere = inputS;
     cout << "Geben Sie das Erscheinungsjahr ein." << endl;
     cin >> inputI;
+    // chatGPT helped for wrong input..
+    while (cin.fail())
+    {
+        cout << "Bitte geben Sie eine Zahl ein" << std::endl;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin >> inputI;
+    }
     if (inputI == -1)
     {
         cout << "Abgebrochen." << endl;
         return;
     }
     else
-        toAdd.release = inputI;
+        toAdd->release = inputI;
     cout << "Geben Sie die Dauer in sekunden ein." << endl;
     cin >> inputI;
+    // chatGPT helped for wrong input..
+    while (cin.fail())
+    {
+        cout << "Bitte geben Sie eine Zahl ein" << std::endl;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin >> inputI;
+    }
     if (inputI == -1)
     {
         cout << "Abgebrochen." << endl;
         return;
     }
     else
-        toAdd.duration = inputI;
+    {
+        toAdd->duration = inputI;
+    }
+
     musicLibrary->add_track(toAdd);
 }
 
+void showEditTrackMenu()
+{
+    cout << "Bearbeiten von einem Song." << endl;
+    if (selectedTrack == 0)
+    {
+        cout << "1. Song auswaehlen" << endl;
+    }
+    else
+    {
+        cout << "1. Ausgewaehlten Song wechseln. (Derzeit ausgewaehlt: '" << selectedTrack->title << "' )" << endl;
+        cout << "2. Metadaten bearbeiten" << endl;
+        cout << "3. Titel loeschen" << endl;
+    }
+    cout << "4. zurueck" << endl;
+}
+
+void selectTrack()
+{
+    int inputI;
+    musicLibrary->printTracks();
+    cout << "Waehlen Sie einen der Songs aus indem Sie die ID (Links vom Titel) eingeben oder -1 zum Abbrechen." << endl;
+    vector<Track *> track = musicLibrary->get_tracks();
+    do
+    {
+        cin >> inputI;
+        if (inputI > 0 && inputI <= track.size())
+        {
+            selectedTrack = track.at(inputI - 1);
+            cout << "Track ausgewaehlt: " << selectedTrack->title << endl;
+            break;
+        }
+        else if (inputI == -1)
+        {
+            cout << "abgebrochen" << endl;
+        }
+    } while (inputI != -1);
+}
+
+void showeditMetaDataOfTrackMenu() {
+    cout << "Metadaten bearbeiten von folgendem Song: " << endl;
+    selectedTrack->printTrack(-1);
+    cout << "1. Titel Aendern" << endl;
+    cout << "2. Album Aendern" << endl;
+    cout << "3. Kuenstler Aendern" << endl;
+    cout << "4. Genere Aendern" << endl;
+    cout << "5. Erscheinungsjahr Aendern" << endl;
+    cout << "6. Dauer in sekunden Aendern" << endl;
+    cout << "7. Abbrechen" << endl;
+}
+
+void editMetaDataOfTrack() {
+    int inputI = 7;
+    string inputS;
+    do {
+        showeditMetaDataOfTrackMenu();
+        cin >> inputI;
+        switch (inputI)
+        {
+        case 1:
+            cout << "Geben Sie den neuen Titel ein." << endl;
+            cin >> inputS;
+            selectedTrack->title = inputS;
+            break;
+        case 2:
+            cout << "Geben Sie den neuen Albumnamen ein." << endl;
+            cin >> inputS;
+            selectedTrack->album = inputS;
+            break;
+        case 3:
+            cout << "Geben Sie den neuen Kuenstler ein." << endl;
+            cin >> inputS;
+            selectedTrack->artist = inputS;
+            break;
+        case 4:
+            cout << "Geben Sie das neue Genere ein." << endl;
+            cin >> inputS;
+            selectedTrack->genere = inputS;
+            break;
+        case 5:
+            cout << "Geben Sie das neue Erscheinungsjahr ein." << endl;
+            cin >> inputI;
+            selectedTrack->release = inputI;
+            inputI = -1;
+            break;
+        case 6:
+            cout << "Geben Sie die neue Dauer in Sekunden ein." << endl;
+            cin >> inputI;
+            selectedTrack->duration = inputI;
+            inputI = -1;
+            break;
+        case 7:
+            /* code */
+            break;
+
+        default:
+            break;
+        }
+    } while (inputI != 7);
+}
+
+void deleteTrack()
+{
+    cout << "Soll der Track wirklich gelöscht werden? (Ja/Nein)" << endl;
+    string inputS;
+    while (true)
+    {
+        cin >> inputS;
+        if (inputS == "Ja" || inputS == "ja")
+        {
+            musicLibrary->deleteTrack(selectedTrack);
+            cout << "Song wurde geloescht." << endl;
+            selectedTrack = 0;
+            break;
+        }
+        else if (inputS == "Nein" || inputS == "nein")
+        {
+            cout << "Song wurde nicht geloescht." << endl;
+            break;
+        }
+        cout << "Geben Sie nur Ja oder Nein ein" << endl;
+    }
+}
+
+void editTrack()
+{
+    int inputI;
+    string inputS;
+    do
+    {
+        showEditTrackMenu();
+        cin >> inputI;
+        switch (inputI)
+        {
+        case 1:
+            selectTrack();
+            break;
+        case 2:
+            if (selectedTrack != 0)
+            {
+                editMetaDataOfTrack();
+            }
+            break;
+        case 3:
+            if (selectedTrack != 0)
+            {
+                deleteTrack();
+            }
+            break;
+        case 4:
+            /* code */
+            break;
+
+        default:
+            cout << "Bitte geben Sie eine gueltige Zahl ein." << endl;
+            break;
+        }
+    } while (inputI != 4);
+}
 void titelMenu()
 {
     int input;
@@ -236,12 +413,9 @@ void titelMenu()
             add_track();
             break;
         case 3:
-            cout << "hier titel loeschen" << endl;
+            editTrack();
             break;
         case 4:
-            cout << "hier titel bearbeiten" << endl;
-            break;
-        case 5:
             cout << "Biss zum naechsten mal" << endl;
             break;
 
@@ -250,7 +424,7 @@ void titelMenu()
             break;
         }
 
-    } while (input != 5);
+    } while (input != 4);
 }
 
 void printPlaylistMenu()
@@ -312,7 +486,8 @@ void printMainMenu()
         cout << "2. Titel Menu" << endl;
         cout << "3. Playlist Menu" << endl;
     }
-    cout << "4. Programm schliessen" << endl;
+    cout << "4. Programm schliessen und speichern" << endl;
+    cout << "5. Programm schliessen aber nicht speichern" << endl;
 }
 
 int mainMenu()
@@ -324,7 +499,7 @@ int mainMenu()
         cin >> input;
         switch (input)
         {
-        case 2: //
+        case 2:
             if (musicLibrary != 0)
             {
                 titelMenu();
@@ -337,6 +512,10 @@ int mainMenu()
             }
             break;
         case 4:
+            cout << "Es wird gespeichert." << endl;
+            fM.save_to_file(*musicLibrary);
+            break;
+        case 5:
             cout << "Biss zum naechsten mal" << endl;
             break;
         case 1:
@@ -347,7 +526,7 @@ int mainMenu()
             break;
         }
 
-    } while (input != 4);
+    } while (input != 4 && input != 5);
     return 0;
 }
 void nope()

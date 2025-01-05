@@ -14,4 +14,6 @@ public:
     string album;
     string genere;
     int duration;
+
+    void printTrack(int id);
 };
