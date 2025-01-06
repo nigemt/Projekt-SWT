@@ -1,4 +1,5 @@
 #include "FileManager.hpp"
+#include "MusicLibrary.hpp"
 #include "json.hpp"
 #include "Track.hpp"
 #include <fstream>
@@ -11,7 +12,7 @@ void FileManager::save_to_file(MusicLibrary musicLibrary)
     for (int i = 0; i < mL.size(); i++)
     {
         Track *currentTrack = mL.at(i);
-        nlohmann::json jT = {
+        nlohmann::json jT = { 
             {"titel", currentTrack->title},
             {"album", currentTrack->album},
             {"release", currentTrack->release},
@@ -33,7 +34,7 @@ void FileManager::save_to_file(MusicLibrary musicLibrary)
 MusicLibrary* FileManager::load_from_file(std::string fileName)
 {
     MusicLibrary* libraryToLoad = new MusicLibrary(fileName);
-
+    
     std::ifstream f(fileName + ".json");
     nlohmann::json j = nlohmann::json::parse(f);
     for (const auto& t : j["tracks"]) {
