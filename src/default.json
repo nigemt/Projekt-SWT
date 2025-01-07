@@ -1,4 +1,13 @@
 {
+    "playlists": [
+        {
+            "name": "goat",
+            "tracks": [
+                "Never Gonna Give You Up",
+                "HEYYEYAAEYAAAEYAEYAA"
+            ]
+        }
+    ],
     "tracks": [
         {
             "album": "Secretly EVERY ALBUM",
@@ -15,6 +24,14 @@
             "genere": "-",
             "release": 0,
             "titel": "HEYYEYAAEYAAAEYAEYAA"
+        },
+        {
+            "album": "-",
+            "artist": "-",
+            "duration": 126,
+            "genere": "-",
+            "release": 0,
+            "titel": "Song in no Playlist"
         }
     ]
 }

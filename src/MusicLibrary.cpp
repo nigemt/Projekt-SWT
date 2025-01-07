@@ -250,6 +250,11 @@ void MusicLibrary::add_track()
     toAdd->printTrack(-1);
 }
 
+void MusicLibrary::add_playlist(Playlist *toAdd)
+{
+    playlist.push_back(toAdd);
+}
+
 void MusicLibrary::add_track(Track *trackToAdd)
 {
     track.push_back(trackToAdd);
@@ -272,6 +277,11 @@ vector<Track *> MusicLibrary::get_tracks()
     return track;
 }
 
+vector<Playlist *> MusicLibrary::get_playlists()
+{
+    return playlist;
+}
+
 std::string MusicLibrary::get_name()
 {
     return name;
@@ -285,6 +295,7 @@ void MusicLibrary::set_name(std::string newname)
 void MusicLibrary::deleteTrack(Track *todelete)
 {
     track.erase(find(track.begin(), track.end(), todelete));
+
     delete todelete;
 }
 

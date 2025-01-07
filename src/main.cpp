@@ -1,19 +1,29 @@
-#include "FileManager.hpp"
-#include "MusicLibrary.hpp"
-#include <fstream>
 #include <iostream>
+#include <fstream>
 #include <limits>
 #include <string>
+#include "MusicLibrary.hpp"
+#include "FileManager.hpp"
+#include "Playlist.hpp"
 
 using namespace std;
 
 MusicLibrary *musicLibrary;
 FileManager fM;
 
+void wait_for_enter()
+{
+    cout << "Druecken Sie Enter um weiter zu kommen." << endl;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // chatGPT helped
+    cin.get();
+}
+
 void create_dummy_data()
 {
     MusicLibrary testdummy("default");
     Track *testTrack = new Track();
+    Playlist *testPlaylist = new Playlist();
+    testPlaylist->name = "goat";
     testTrack->title = "Never Gonna Give You Up";
     testTrack->album = "Secretly EVERY ALBUM";
     testTrack->duration = 3 * 60;
@@ -21,6 +31,7 @@ void create_dummy_data()
     testTrack->genere = "EVERYTHING";
     testTrack->artist = "Rick Astley";
     testdummy.add_track(testTrack);
+    testPlaylist->addTrack(testTrack);
     testTrack = new Track();
     testTrack->title = "HEYYEYAAEYAAAEYAEYAA";
     testTrack->album = "-";
@@ -29,6 +40,16 @@ void create_dummy_data()
     testTrack->genere = "-";
     testTrack->artist = "-";
     testdummy.add_track(testTrack);
+    testPlaylist->addTrack(testTrack);
+    testTrack = new Track();
+    testTrack->title = "Song in no Playlist";
+    testTrack->album = "-";
+    testTrack->duration = 2 * 60 + 6;
+    testTrack->release = 0;
+    testTrack->genere = "-";
+    testTrack->artist = "-";
+    testdummy.add_track(testTrack);
+    testdummy.add_playlist(testPlaylist);
     fM.save_to_file(testdummy);
 }
 
@@ -165,10 +186,7 @@ void titelMenu()
         {
         case 1:
             musicLibrary->printTracks();
-            cout << "Enter um zu dem Menue zu springen." << endl;
-            // wait for user to hit enter
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cin.get();
+            wait_for_enter();
             break;
         case 2:
             musicLibrary->add_track();
@@ -204,6 +222,7 @@ void printPlaylistMenu()
 void playlistMenu()
 {
     int input;
+    vector<Playlist*> toPrint = musicLibrary->get_playlists();
     do
     {
         printPlaylistMenu();
@@ -211,8 +230,11 @@ void playlistMenu()
         switch (input)
         {
         case 1:
-            cout << "hier alle playlists ausgeben" << endl;
-
+            for (int i = 0; i < toPrint.size(); i++)
+            {
+                cout << i+1 << " " << toPrint.at(i)->name << endl;
+            }
+            wait_for_enter();
             break;
         case 2:
             cout << "hier playlist hinzufuegen" << endl;
