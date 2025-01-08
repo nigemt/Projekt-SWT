@@ -1,10 +1,10 @@
-#include <iostream>
+#include "FileManager.hpp"
+#include "MusicLibrary.hpp"
+#include "Playlist.hpp"
 #include <fstream>
+#include <iostream>
 #include <limits>
 #include <string>
-#include "MusicLibrary.hpp"
-#include "FileManager.hpp"
-#include "Playlist.hpp"
 
 using namespace std;
 
@@ -208,21 +208,26 @@ void titelMenu()
     } while (input != 5);
 }
 
+Playlist *selectedPlaylist = 0;
+
 void printPlaylistMenu()
 {
     cout << "Playlist Menu" << endl;
     cout << "Bitte geben Sie die Zahl des Menuepunktes ein." << endl;
-    cout << "1. Alle Playlists ausgeben" << endl;
-    cout << "2. Playlist hinzufuegen" << endl;
-    cout << "3. Playlist loeschen" << endl;
-    cout << "4. Playlist bearbeiten" << endl;
+    cout << "1. Playlist auswaehlen." << endl;
+    cout << "2. Neue Playlist hinzufuegen" << endl;
+    if (selectedPlaylist != 0)
+    {
+        cout << "Ausgewaehlte Playlist: " << selectedPlaylist->name << endl;
+        cout << "3. Playlist loeschen" << endl;
+        cout << "4. Playlist bearbeiten" << endl;
+    }
     cout << "5. zurueck" << endl;
 }
 
 void playlistMenu()
 {
     int input;
-    vector<Playlist*> toPrint = musicLibrary->get_playlists();
     do
     {
         printPlaylistMenu();
@@ -230,20 +235,19 @@ void playlistMenu()
         switch (input)
         {
         case 1:
-            for (int i = 0; i < toPrint.size(); i++)
-            {
-                cout << i+1 << " " << toPrint.at(i)->name << endl;
-            }
-            wait_for_enter();
+            selectedPlaylist = musicLibrary->selectPlaylists();
             break;
         case 2:
-            cout << "hier playlist hinzufuegen" << endl;
+            selectedPlaylist = musicLibrary->add_playlist();
             break;
         case 3:
             cout << "hier playlist loeschen" << endl;
             break;
         case 4:
-            cout << "hier playlist bearbeiten" << endl;
+            if (selectedPlaylist != 0)
+            {
+                selectedPlaylist->editTracksMenu(musicLibrary->get_tracks());
+            }
             break;
         case 5:
             cout << "Biss zum naechsten mal" << endl;

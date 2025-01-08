@@ -24,8 +24,10 @@ public:
     MusicLibrary(std::string newname);
     void add_track();
     void add_playlist(Playlist *toAdd);
+    Playlist* add_playlist();
     void add_track(Track *trackToAdd);
     void printTracks();
+    Playlist* selectPlaylists();
     vector<Track *> get_tracks();
     vector<Playlist *> get_playlists();
     std::string get_name();

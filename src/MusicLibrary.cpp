@@ -1,8 +1,8 @@
 #include "MusicLibrary.hpp"
 #include "json.hpp"
 #include <fstream>
-#include <limits>
 #include <iostream>
+#include <limits>
 
 using namespace std;
 
@@ -26,7 +26,8 @@ void MusicLibrary::selectTrack()
 {
     int inputI;
     printTracks();
-    cout << "Waehlen Sie einen der Songs aus indem Sie die ID (Links vom Titel) eingeben oder -1 zum Abbrechen." << endl;
+    cout << "Waehlen Sie einen der Songs aus indem Sie die ID (Links vom Titel) eingeben oder -1 zum Abbrechen."
+         << endl;
     do
     {
         cin >> inputI;
@@ -255,6 +256,38 @@ void MusicLibrary::add_playlist(Playlist *toAdd)
     playlist.push_back(toAdd);
 }
 
+Playlist *MusicLibrary::add_playlist()
+{
+    string inputS;
+    std::cout << "Geben Sie den Namen der neuen Playlist an. (oder 'Abbrechen')" << endl;
+    cin >> inputS;
+    if (inputS == "Abbrechen")
+    {
+        cout << "Abgebrochen" << endl;
+        return 0;
+    }
+    Playlist *toAdd = new Playlist();
+    toAdd->name = inputS;
+    add_playlist(toAdd);
+    cout << "Soll die Playlist sofort befuellt werden? (Ja/Nein)" << endl;
+    while (true)
+    {
+        cin >> inputS;
+        if (inputS == "Ja" || inputS == "ja")
+        {
+            toAdd->addTrackMenu(track);
+            break;
+        }
+        else if (inputS == "Nein" || inputS == "nein")
+        {
+            cout << "Songs können durch die 'Playlist bearbeiten' option hinzugefuegt werden." << endl;
+            break;
+        }
+        cout << "Geben Sie nur Ja oder Nein ein" << endl;
+    }
+    return toAdd;
+}
+
 void MusicLibrary::add_track(Track *trackToAdd)
 {
     track.push_back(trackToAdd);
@@ -270,6 +303,34 @@ void MusicLibrary::printTracks()
     {
         track.at(i)->printTrack(i + 1);
     }
+}
+
+Playlist *MusicLibrary::selectPlaylists()
+{
+    int inputI;
+    do
+    {
+        for (int i = 0; i < playlist.size(); i++)
+        {
+            cout << i + 1 << " " << playlist.at(i)->name << endl;
+        }
+        cout << "Geben Sie die Nummer neben dem Playlist namen ein um Sie auszuwählen." << endl;
+        cin >> inputI;
+        if (inputI > 0 && inputI <= playlist.size())
+        {
+            return playlist.at(inputI - 1);
+        }
+        else if (inputI == -1)
+        {
+            cout << "Keine Playlist ausgewahlt" << endl;
+            break;
+        }
+        else
+        {
+            cout << "Geben Sie eine gueltige Zahl ein." << endl;
+        }
+    } while (inputI != -1);
+    return 0;
 }
 
 vector<Track *> MusicLibrary::get_tracks()
@@ -294,8 +355,8 @@ void MusicLibrary::set_name(std::string newname)
 
 void MusicLibrary::deleteTrack(Track *todelete)
 {
+    // chatGPT
     track.erase(find(track.begin(), track.end(), todelete));
-
     delete todelete;
 }
 
