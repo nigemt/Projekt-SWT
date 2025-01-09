@@ -1,14 +1,15 @@
-#include "FileManager.hpp"
-#include "MusicLibrary.hpp"
-#include "Playlist.hpp"
-#include <fstream>
 #include <iostream>
+#include <fstream>
 #include <limits>
 #include <string>
+#include "MusicLibrary.hpp"
+#include "FileManager.hpp"
+#include "Playlist.hpp"
 
 using namespace std;
 
 MusicLibrary *musicLibrary;
+Playlist *selectedPlaylist = 0;
 FileManager fM;
 
 void wait_for_enter()
@@ -102,7 +103,7 @@ int enter_LibraryName()
         {
             return -1;
         }
-        ifstream file(input);
+        ifstream file(input + ".json");
         if (file)
         {
             musicLibrary = fM.load_from_file(input);
@@ -133,6 +134,7 @@ int enter_LibraryName()
 
 void showLibraryMenu()
 {
+    selectedPlaylist = 0;
     int input;
     do
     {
@@ -208,7 +210,6 @@ void titelMenu()
     } while (input != 5);
 }
 
-Playlist *selectedPlaylist = 0;
 
 void printPlaylistMenu()
 {
@@ -216,8 +217,7 @@ void printPlaylistMenu()
     cout << "Bitte geben Sie die Zahl des Menuepunktes ein." << endl;
     cout << "1. Playlist auswaehlen." << endl;
     cout << "2. Neue Playlist hinzufuegen" << endl;
-    if (selectedPlaylist != 0)
-    {
+    if (selectedPlaylist != 0) {
         cout << "Ausgewaehlte Playlist: " << selectedPlaylist->name << endl;
         cout << "3. Playlist loeschen" << endl;
         cout << "4. Playlist bearbeiten" << endl;
@@ -228,6 +228,7 @@ void printPlaylistMenu()
 void playlistMenu()
 {
     int input;
+    string inputS;
     do
     {
         printPlaylistMenu();
@@ -241,11 +242,19 @@ void playlistMenu()
             selectedPlaylist = musicLibrary->add_playlist();
             break;
         case 3:
-            cout << "hier playlist loeschen" << endl;
+            if (selectedPlaylist != 0) {
+                cout << "Sicher? ('ja', alles andere bricht das loeschen ab)" << endl;
+                cin >> inputS;
+                if(inputS == "Ja" || inputS == "ja") {
+                    musicLibrary->deletePlaylist(selectedPlaylist);
+                    selectedPlaylist = 0;
+                } else {
+                    cout << "Dann halt nicht" << endl;
+                }
+            }
             break;
         case 4:
-            if (selectedPlaylist != 0)
-            {
+            if (selectedPlaylist != 0) {
                 selectedPlaylist->editTracksMenu(musicLibrary->get_tracks());
             }
             break;
@@ -253,7 +262,7 @@ void playlistMenu()
             cout << "Biss zum naechsten mal" << endl;
             break;
         default:
-            cout << "Bitte geben Sie eine gültige Zahl ein." << endl;
+            cout << "Bitte geben Sie eine gueltige Zahl ein." << endl;
             break;
         }
 

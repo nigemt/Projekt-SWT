@@ -1,8 +1,8 @@
 #include "MusicLibrary.hpp"
 #include "json.hpp"
 #include <fstream>
-#include <iostream>
 #include <limits>
+#include <iostream>
 
 using namespace std;
 
@@ -26,8 +26,7 @@ void MusicLibrary::selectTrack()
 {
     int inputI;
     printTracks();
-    cout << "Waehlen Sie einen der Songs aus indem Sie die ID (Links vom Titel) eingeben oder -1 zum Abbrechen."
-         << endl;
+    cout << "Waehlen Sie einen der Songs aus indem Sie die ID (Links vom Titel) eingeben oder -1 zum Abbrechen." << endl;
     do
     {
         cin >> inputI;
@@ -310,23 +309,22 @@ Playlist *MusicLibrary::selectPlaylists()
     int inputI;
     do
     {
+        if(playlist.size() == 0) {
+            cout << "Es existieren keine Playlists" << endl;
+            return 0;
+        }
         for (int i = 0; i < playlist.size(); i++)
         {
             cout << i + 1 << " " << playlist.at(i)->name << endl;
         }
         cout << "Geben Sie die Nummer neben dem Playlist namen ein um Sie auszuwählen." << endl;
         cin >> inputI;
-        if (inputI > 0 && inputI <= playlist.size())
-        {
-            return playlist.at(inputI - 1);
-        }
-        else if (inputI == -1)
-        {
+        if (inputI > 0 && inputI <= playlist.size()) {
+            return playlist.at(inputI -1);
+        } else if (inputI == -1) {
             cout << "Keine Playlist ausgewahlt" << endl;
             break;
-        }
-        else
-        {
+        } else {
             cout << "Geben Sie eine gueltige Zahl ein." << endl;
         }
     } while (inputI != -1);
@@ -358,6 +356,12 @@ void MusicLibrary::deleteTrack(Track *todelete)
     // chatGPT
     track.erase(find(track.begin(), track.end(), todelete));
     delete todelete;
+}
+
+void MusicLibrary::deletePlaylist(Playlist *toDelete)
+{
+    playlist.erase(find(playlist.begin(), playlist.end(), toDelete));
+    delete toDelete;
 }
 
 void MusicLibrary::edit_track()

@@ -33,6 +33,7 @@ public:
     std::string get_name();
     void set_name(std::string newname);
     void deleteTrack(Track *todelete);
+    void deletePlaylist(Playlist* toDelete);
     void edit_track();
     void search_track();
 };
