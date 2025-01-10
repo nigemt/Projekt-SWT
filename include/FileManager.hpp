@@ -8,4 +8,5 @@ class FileManager
 public:
     void save_to_file(MusicLibrary musicLibrary);
     MusicLibrary* load_from_file(std::string fileName);
+    void create_dummy_data();
 };

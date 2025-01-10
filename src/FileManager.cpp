@@ -75,9 +75,47 @@ MusicLibrary *FileManager::load_from_file(std::string fileName)
                 if (track.at(i)->title.find(t2) != string::npos)
                     currentplaylist->addTrack(track.at(i));
             }
-            
+
         }
         libraryToLoad->add_playlist(currentplaylist);
     }
     return libraryToLoad;
+}
+
+void FileManager::create_dummy_data()
+{
+    ifstream file("default.json");
+    if (file)
+        return;
+    MusicLibrary testdummy("default");
+    Track *testTrack = new Track();
+    Playlist *testPlaylist = new Playlist();
+    testPlaylist->name = "goat";
+    testTrack->title = "Never Gonna Give You Up";
+    testTrack->album = "Whenever";
+    testTrack->duration = 3.3 * 60;
+    testTrack->release = 1987;
+    testTrack->genere = "Pop";
+    testTrack->artist = "Rick Astley";
+    testdummy.add_track(testTrack);
+    testPlaylist->addTrack(testTrack);
+    testTrack = new Track();
+    testTrack->title = "Blinding Lights";
+    testTrack->album = "After Hours";
+    testTrack->duration = 2 * 60;
+    testTrack->release = 2019;
+    testTrack->genere = "Electro";
+    testTrack->artist = "The Weeknd";
+    testdummy.add_track(testTrack);
+    testPlaylist->addTrack(testTrack);
+    testTrack = new Track();
+    testTrack->title = "Song in no Playlist";
+    testTrack->album = "-";
+    testTrack->duration = 2.2 * 60;
+    testTrack->release = 0;
+    testTrack->genere = "-";
+    testTrack->artist = "-";
+    testdummy.add_track(testTrack);
+    testdummy.add_playlist(testPlaylist);
+    save_to_file(testdummy);
 }

@@ -5,6 +5,7 @@
 #include "MusicLibrary.hpp"
 #include "FileManager.hpp"
 #include "Playlist.hpp"
+#include <filesystem>
 
 using namespace std;
 
@@ -19,50 +20,15 @@ void wait_for_enter()
     cin.get();
 }
 
-void create_dummy_data()
-{
-    MusicLibrary testdummy("default");
-    Track *testTrack = new Track();
-    Playlist *testPlaylist = new Playlist();
-    testPlaylist->name = "goat";
-    testTrack->title = "Never Gonna Give You Up";
-    testTrack->album = "Secretly EVERY ALBUM";
-    testTrack->duration = 3 * 60;
-    testTrack->release = 0;
-    testTrack->genere = "EVERYTHING";
-    testTrack->artist = "Rick Astley";
-    testdummy.add_track(testTrack);
-    testPlaylist->addTrack(testTrack);
-    testTrack = new Track();
-    testTrack->title = "HEYYEYAAEYAAAEYAEYAA";
-    testTrack->album = "-";
-    testTrack->duration = 2 * 60 + 6;
-    testTrack->release = 0;
-    testTrack->genere = "-";
-    testTrack->artist = "-";
-    testdummy.add_track(testTrack);
-    testPlaylist->addTrack(testTrack);
-    testTrack = new Track();
-    testTrack->title = "Song in no Playlist";
-    testTrack->album = "-";
-    testTrack->duration = 2 * 60 + 6;
-    testTrack->release = 0;
-    testTrack->genere = "-";
-    testTrack->artist = "-";
-    testdummy.add_track(testTrack);
-    testdummy.add_playlist(testPlaylist);
-    fM.save_to_file(testdummy);
-}
-
 void printLibraryMenu()
 {
-
     cout << "Music Bibliothek Menu" << endl;
     cout << "Bitte geben Sie die Zahl des Menuepunktes ein." << endl;
     cout << "1. Die Default Bibliothek laden" << endl;
-    cout << "2. per Dateinamen laden" << endl;
-    cout << "3. Eine neue Bibliothek erstellen" << endl;
-    cout << "4. zurueck" << endl;
+    cout << "2. Alle Bibliotheken ausgeben" << endl;
+    cout << "3. per Dateinamen laden" << endl;
+    cout << "4. Eine neue Bibliothek erstellen" << endl;
+    cout << "5. zurueck" << endl;
 }
 
 void create_Library()
@@ -108,18 +74,18 @@ int enter_LibraryName()
         {
             musicLibrary = fM.load_from_file(input);
             cout << "Die Bibliothek wurde geladen." << endl;
-            return 4;
+            return 5;
         }
         cout << "Die angegebene Datei existiert nicht. Neue erstellen?(Ja/Nein)" << endl;
-        cin >> yesno;
         while (true)
         {
+            cin >> yesno;
             if (yesno == "Ja" || yesno == "ja")
             {
                 musicLibrary = new MusicLibrary(input);
                 fM.save_to_file(*musicLibrary);
                 cout << "neue Bibliothek wurde erstellt und wurde ausgewaehlt." << endl;
-                return 4;
+                return 5;
             }
             else if (yesno == "Nein" || yesno == "nein")
             {
@@ -130,6 +96,25 @@ int enter_LibraryName()
         }
     } while (input != "exit");
     return -1;
+}
+
+// chatGPT helped
+void printAllLibraries()
+{
+    try
+    {
+        for (const auto &entry : filesystem::directory_iterator("./"))
+        {
+            if (entry.is_regular_file() && entry.path().extension() == ".json")
+            {
+                std::cout << entry.path().filename() << std::endl;
+            }
+        }
+    }
+    catch (const filesystem::filesystem_error &e)
+    {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
 }
 
 void showLibraryMenu()
@@ -144,16 +129,19 @@ void showLibraryMenu()
         {
         case 1:
             cout << "Die Default Bibliothek wird geladen." << endl;
-            create_dummy_data();
+            fM.create_dummy_data();
             musicLibrary = fM.load_from_file("default");
-            input = 4;
-            break;
-        case 2:
-            input = enter_LibraryName();
+            input = 5;
             break;
         case 3:
+            input = enter_LibraryName();
+            break;
+        case 4:
             create_Library();
-            input = 4;
+            input = 5;
+            break;
+        case 2:
+            printAllLibraries();
             break;
 
         default:
@@ -161,7 +149,7 @@ void showLibraryMenu()
             break;
         }
 
-    } while (input != 4);
+    } while (input != 5);
 }
 
 void printTitelMenu()
@@ -174,7 +162,6 @@ void printTitelMenu()
     cout << "4. Titel suchen" << endl;
     cout << "5. zurueck" << endl;
 }
-
 
 void titelMenu()
 {
@@ -210,14 +197,14 @@ void titelMenu()
     } while (input != 5);
 }
 
-
 void printPlaylistMenu()
 {
     cout << "Playlist Menu" << endl;
     cout << "Bitte geben Sie die Zahl des Menuepunktes ein." << endl;
     cout << "1. Playlist auswaehlen." << endl;
     cout << "2. Neue Playlist hinzufuegen" << endl;
-    if (selectedPlaylist != 0) {
+    if (selectedPlaylist != 0)
+    {
         cout << "Ausgewaehlte Playlist: " << selectedPlaylist->name << endl;
         cout << "3. Playlist loeschen" << endl;
         cout << "4. Playlist bearbeiten" << endl;
@@ -242,19 +229,24 @@ void playlistMenu()
             selectedPlaylist = musicLibrary->add_playlist();
             break;
         case 3:
-            if (selectedPlaylist != 0) {
+            if (selectedPlaylist != 0)
+            {
                 cout << "Sicher? ('ja', alles andere bricht das loeschen ab)" << endl;
                 cin >> inputS;
-                if(inputS == "Ja" || inputS == "ja") {
+                if (inputS == "Ja" || inputS == "ja")
+                {
                     musicLibrary->deletePlaylist(selectedPlaylist);
                     selectedPlaylist = 0;
-                } else {
+                }
+                else
+                {
                     cout << "Dann halt nicht" << endl;
                 }
             }
             break;
         case 4:
-            if (selectedPlaylist != 0) {
+            if (selectedPlaylist != 0)
+            {
                 selectedPlaylist->editTracksMenu(musicLibrary->get_tracks());
             }
             break;

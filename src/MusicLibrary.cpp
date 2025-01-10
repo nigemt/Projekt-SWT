@@ -99,10 +99,11 @@ void MusicLibrary::editMetaDataOfTrack()
             inputI = -1;
             break;
         case 7:
-            /* code */
+            cout << "Ok. Abgebrochen!" << endl;
             break;
 
         default:
+        cout << "Falsche Eingabe" << endl;
             break;
         }
     } while (inputI != 7);
@@ -175,7 +176,7 @@ void MusicLibrary::add_track()
     cout << "Sie koennen jederzeit Abbrechen durch die Eingabe 'Abbrechen' oder '-1'" << endl;
     cout << "Geben Sie den Titel ein." << endl;
     cin >> inputS;
-    if (inputS == "Abbrechen")
+    if (inputS == "Abbrechen" && inputS != "-1")
     {
         cout << "Abgebrochen." << endl;
         return;
@@ -184,7 +185,7 @@ void MusicLibrary::add_track()
         toAdd->title = inputS;
     cout << "Geben Sie den Namen des Albums ein." << endl;
     cin >> inputS;
-    if (inputS == "Abbrechen")
+    if (inputS == "Abbrechen" && inputS != "-1")
     {
         cout << "Abgebrochen." << endl;
         return;
@@ -193,7 +194,7 @@ void MusicLibrary::add_track()
         toAdd->album = inputS;
     cout << "Geben Sie den Kuenstler ein." << endl;
     cin >> inputS;
-    if (inputS == "Abbrechen")
+    if (inputS == "Abbrechen" && inputS != "-1")
     {
         cout << "Abgebrochen." << endl;
         return;
@@ -202,7 +203,7 @@ void MusicLibrary::add_track()
         toAdd->artist = inputS;
     cout << "Geben Sie das Genere ein." << endl;
     cin >> inputS;
-    if (inputS == "Abbrechen")
+    if (inputS == "Abbrechen" && inputS != "-1")
     {
         cout << "Abgebrochen." << endl;
         return;
@@ -488,7 +489,7 @@ void MusicLibrary::search_track()
             {
                 currentTrack = track.at(i);
                 // find returns npos if the input does not appear in the title variable (ChatGPT told me)
-                if (currentTrack->release = inputI)
+                if (currentTrack->release == inputI)
                 {
                     currentTrack->printTrack(i + 1);
                     foundSomething = true;
@@ -505,7 +506,7 @@ void MusicLibrary::search_track()
             {
                 currentTrack = track.at(i);
                 // find returns npos if the input does not appear in the title variable (ChatGPT told me)
-                if (currentTrack->duration = inputI)
+                if (currentTrack->duration == inputI)
                 {
                     currentTrack->printTrack(i + 1);
                     foundSomething = true;
