@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
-#include <catch.hpp>
-#include "MusicLibrary.hpp"
 #include "FileManager.hpp"
+#include "MusicLibrary.hpp"
+#include <catch.hpp>
 #include <fstream>
 #include <iostream>
 
@@ -42,7 +42,35 @@ TEST_CASE("default.json Tests")
     // cleanup
     std::remove("default.json");
 }
+TEST_CASE("Bibliothek Tests")
+{
+    MusicLibrary testLibrary("irrelevant");
+    Track *t = new Track();
+    Playlist *p = new Playlist();
 
+    SECTION("Track hinzufuegen")
+    {
+        REQUIRE(testLibrary.get_tracks().size() == 0);
+        testLibrary.add_track(t);
+        REQUIRE(testLibrary.get_tracks().size() == 1);
 
+        SECTION("Track entfernen")
+        {
+            testLibrary.deleteTrack(t);
+            REQUIRE(testLibrary.get_tracks().size() == 0);
+        }
+    }
 
+    SECTION("Playlist hinzufuegen")
+    {
+        REQUIRE(testLibrary.get_playlists().size() == 0);
+        testLibrary.add_playlist(p);
+        REQUIRE(testLibrary.get_playlists().size() == 1);
 
+        SECTION("Playlist entfernen")
+        {
+            testLibrary.deletePlaylist(p);
+            REQUIRE(testLibrary.get_playlists().size() == 0);
+        }
+    }
+}
