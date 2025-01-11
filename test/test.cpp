@@ -42,6 +42,7 @@ TEST_CASE("default.json Tests")
     // cleanup
     std::remove("default.json");
 }
+
 TEST_CASE("Bibliothek Tests")
 {
     MusicLibrary testLibrary("irrelevant");
@@ -71,6 +72,32 @@ TEST_CASE("Bibliothek Tests")
         {
             testLibrary.deletePlaylist(p);
             REQUIRE(testLibrary.get_playlists().size() == 0);
+        }
+    }
+}
+
+TEST_CASE("Playlist Tests")
+{
+    Track *t = new Track();
+    Playlist *p = new Playlist();
+
+    SECTION("Track hinzufuegen")
+    {
+        REQUIRE(p->getTracks().size() == 0);
+        p->addTrack(t);
+        REQUIRE(p->getTracks().size() == 1);
+
+        SECTION("Track enthalten?")
+        {
+            REQUIRE(p->containsTrack(t));
+            Track *n = new Track();
+            REQUIRE(!p->containsTrack(n));
+        }
+
+        SECTION("Track entfernen")
+        {
+            p->removeTrack(t);
+            REQUIRE(p->getTracks().size() == 0);
         }
     }
 }
