@@ -212,8 +212,8 @@ void MusicLibrary::add_track()
         toAdd->genere = inputS;
     cout << "Geben Sie das Erscheinungsjahr ein." << endl;
     cin >> inputI;
-    // chatGPT helped for wrong input..
-    while (cin.fail())
+
+    while (cin.fail())          // chatGPT helped for wrong input
     {
         cout << "Bitte geben Sie eine Zahl ein" << endl;
         cin.clear();
@@ -229,8 +229,8 @@ void MusicLibrary::add_track()
         toAdd->release = inputI;
     cout << "Geben Sie die Dauer in sekunden ein." << endl;
     cin >> inputI;
-    // chatGPT helped for wrong input..
-    while (cin.fail())
+
+    while (cin.fail())          // chatGPT helped for wrong input
     {
         cout << "Bitte geben Sie eine Zahl ein" << endl;
         cin.clear();
@@ -354,8 +354,8 @@ void MusicLibrary::set_name(std::string newname)
 
 void MusicLibrary::deleteTrack(Track *todelete)
 {
-    // chatGPT
-    track.erase(find(track.begin(), track.end(), todelete));
+
+    track.erase(find(track.begin(), track.end(), todelete));    // chatGPT
     delete todelete;
 }
 

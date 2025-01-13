@@ -5,7 +5,7 @@
 #include <fstream>
 #include <iostream>
 
-void FileManager::save_to_file(MusicLibrary musicLibrary)
+void FileManager::save_to_file(MusicLibrary musicLibrary)          //speichert MusicLibrary als json
 {
     nlohmann::json complete;
     vector<Track *> mL = musicLibrary.get_tracks();
@@ -46,7 +46,7 @@ void FileManager::save_to_file(MusicLibrary musicLibrary)
     }
 }
 
-MusicLibrary *FileManager::load_from_file(std::string fileName)
+MusicLibrary *FileManager::load_from_file(std::string fileName)     //lädt MusicLibrary aus json
 {
     MusicLibrary *libraryToLoad = new MusicLibrary(fileName);
 
@@ -82,7 +82,7 @@ MusicLibrary *FileManager::load_from_file(std::string fileName)
     return libraryToLoad;
 }
 
-void FileManager::create_dummy_data()
+void FileManager::create_dummy_data()                               //erstellt default Library
 {
     ifstream file("default.json");
     if (file)

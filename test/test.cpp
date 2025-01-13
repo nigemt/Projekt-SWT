@@ -7,7 +7,7 @@
 
 TEST_CASE("default.json Tests")
 {
-    FileManager fm;
+    FileManager fm;                                         //löschen json Datei und überprüfen ob gelöscht
     std::remove("default.json");
     ifstream file("default.json");
     REQUIRE(!file);
@@ -39,8 +39,8 @@ TEST_CASE("default.json Tests")
             REQUIRE(mL->get_tracks().size() == 4);
         }
     }
-    // cleanup
-    std::remove("default.json");
+
+    std::remove("default.json");                                // cleanup
 }
 
 TEST_CASE("Bibliothek Tests")

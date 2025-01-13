@@ -2,7 +2,7 @@
 #include <string>
 
 using namespace std;
-
+//Track Klasse mit Meta Daten
 class Track
 {
 private:

@@ -3,6 +3,7 @@
 #include <vector>
 #include "Track.hpp"
 #include "Playlist.hpp"
+//MusicLibrary Klasse für Verwaltung
 class MusicLibrary
 {
 private:

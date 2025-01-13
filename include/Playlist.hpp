@@ -2,7 +2,7 @@
 #include <vector>
 #include "Track.hpp"
 #include <string>
-
+//Playlist Klasse für Track Verwaltung
 class Playlist
 {
 private:

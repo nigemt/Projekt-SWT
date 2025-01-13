@@ -3,6 +3,8 @@
 #include <iostream>
 #include <limits>
 
+//Verwaltung Playlist
+
 using namespace std;
 
 void Playlist::addTrack(Track *toAdd)

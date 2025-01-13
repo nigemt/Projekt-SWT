@@ -1,7 +1,7 @@
 #include "Track.hpp"
 #include <iostream>
 
-void Track::printTrack(int id)
+void Track::printTrack(int id)                  //Track mit Metadaten ausgeben
 {
     if (id != -1)
         std::cout << id << ": ";

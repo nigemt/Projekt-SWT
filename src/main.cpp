@@ -16,7 +16,7 @@ FileManager fM;
 void wait_for_enter()
 {
     cout << "Druecken Sie Enter um weiter zu kommen." << endl;
-    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // chatGPT helped
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');        // chatGPT helped
     cin.get();
 }
 
@@ -98,9 +98,10 @@ int enter_LibraryName()
     return -1;
 }
 
-// chatGPT helped
+
 void printAllLibraries()
 {
+    // chatGPT helped
     try
     {
         for (const auto &entry : filesystem::directory_iterator("./"))
@@ -133,6 +134,9 @@ void showLibraryMenu()
             musicLibrary = fM.load_from_file("default");
             input = 5;
             break;
+        case 2:
+            printAllLibraries();
+            break;
         case 3:
             input = enter_LibraryName();
             break;
@@ -140,10 +144,6 @@ void showLibraryMenu()
             create_Library();
             input = 5;
             break;
-        case 2:
-            printAllLibraries();
-            break;
-
         default:
             cout << "Bitte geben Sie eine gueltige Zahl ein." << endl;
             break;
@@ -289,6 +289,9 @@ int mainMenu()
         cin >> input;
         switch (input)
         {
+        case 1:
+            showLibraryMenu();
+            break;
         case 2:
             if (musicLibrary != 0)
             {
@@ -308,9 +311,7 @@ int mainMenu()
         case 5:
             cout << "Biss zum naechsten mal" << endl;
             break;
-        case 1:
-            showLibraryMenu();
-            break;
+
         default:
             cout << "Bitte geben Sie eine gültige Zahl ein." << endl;
             break;
